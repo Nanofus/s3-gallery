@@ -11,14 +11,15 @@
             loggedIn = getCookie("password") != null;
         }
     });
-    
+
     const getCookie = (name: string) => {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts?.pop()?.split(';').shift();
     }
 
-    const login = () => {
+    const login = (e: Event) => {
+        e.preventDefault();
         if (password) {
             fetch("/api/login", {
                 method: "POST",
@@ -29,7 +30,7 @@
             }).then(res => {
                 if (res.ok) {
                     loggedIn = true;
-                    if (!getCookie("password")) document.cookie="password=" + btoa(password) + ";path=/;samesite=strict;secure";
+                    if (!getCookie("password")) document.cookie = "password=" + btoa(password) + ";path=/;samesite=strict;secure";
                     location.reload();
                 } else {
                     alert(PUBLIC_INCORRECT_PASSWORD);
@@ -55,7 +56,9 @@
         <slot></slot>
     {:else}
         <p>{PUBLIC_LOGIN_TEXT}</p>
-        <input bind:value={password} type="password" placeholder="Password"/>
-        <button on:click={login}>Login</button>
+        <form>
+            <input bind:value={password} type="password" placeholder="Password"/>
+            <button type="submit" on:click={login}>Login</button>
+        </form>
     {/if}
 </main>
