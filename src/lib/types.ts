@@ -4,7 +4,6 @@ export type AlbumList = {
 
 export type Album = {
     name: string;
-    slug: string;
 };
 
 export type AlbumData = Album & {
