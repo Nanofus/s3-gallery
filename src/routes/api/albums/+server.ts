@@ -10,11 +10,7 @@ import {
     SITE_PASSWORD
 } from "$env/static/private";
 
-export const GET: RequestHandler = async ({ cookies }) => {
-    if (!cookies.get("password") || cookies.get("password") !== btoa(SITE_PASSWORD)) {
-        return json({error: "Not logged in"});
-    }
-    
+export const GET: RequestHandler = async () => {
     const s3 = new S3({
         region: AWS_REGION, credentials: {
             accessKeyId: AWS_ACCESS_KEY_ID,

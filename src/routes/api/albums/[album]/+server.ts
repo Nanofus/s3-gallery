@@ -10,11 +10,7 @@ import {
     SITE_PASSWORD
 } from "$env/static/private";
 
-export const GET: RequestHandler = async ({cookies, params}) => {
-    if (!cookies.get("password") || cookies.get("password") !== btoa(SITE_PASSWORD)) {
-        return json({error: "Not logged in"});
-    }
-    
+export const GET: RequestHandler = async ({params}) => {
     if (!params.album) {
         return json({error: "No album specified"});
     }
