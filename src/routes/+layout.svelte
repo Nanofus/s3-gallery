@@ -5,8 +5,10 @@
 <svelte:head>
     <title>{PUBLIC_SITE_TITLE}</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+        
         body {
-            background-color: darkturquoise;
+            font-family: 'Inter', -apple-system, sans-serif;
         }
     </style>
 </svelte:head>
@@ -15,3 +17,9 @@
 <main>
     <slot></slot>
 </main>
+
+<style>
+    h1 {
+        font-size: 1rem;
+    }
+</style>

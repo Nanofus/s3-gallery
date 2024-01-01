@@ -15,3 +15,13 @@
         </li>
     {/each}
 </ul>
+
+<style>
+    ul {
+        padding: 0;
+    }
+    
+    li {
+        list-style: none;
+    }
+</style>

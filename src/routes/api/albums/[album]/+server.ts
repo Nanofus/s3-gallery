@@ -30,9 +30,10 @@ export const GET: RequestHandler = async ({params}) => {
 
     let response: AlbumData = {
         name: params.album,
-        images: content.map(item => {
+        images: content.filter(item => !item.Key?.includes('thumbs')).map(item => {
             return {
                 url: 'https://' + AWS_BUCKET + '/' + item.Key || '',
+                thumbnailUrl: 'https://' + AWS_BUCKET + '/' + item.Key?.replace('/' + params.album + '/', '/' + params.album + '/thumbs/') || '',
                 description: ''
             }
         }).filter(item => !item.url.endsWith('/'))

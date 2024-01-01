@@ -10,6 +10,12 @@
         return ["mp4", "webm", "ogg", "mov", "m4v", "mts"].includes(ext);
     }
 
+    const isGif = (url: string) => {
+        const ext = url.split(".")?.pop()?.toLowerCase();
+        if (!ext) return false;
+        return ["gif"].includes(ext);
+    }
+
     const images = data.album.images.sort((a, b) => {
         if (isVideo(a.url) && !isVideo(b.url)) return 1;
         if (!isVideo(a.url) && isVideo(b.url)) return -1;
@@ -25,24 +31,38 @@
             <a href="{image.url}">
                 <div class="thumbnail">VIDEO</div>
             </a>
+        {:else if isGif(image.url)}
+            <a href="{image.url}">
+                <img src="{image.url}" class="thumbnail" alt="{image.description}">
+            </a>
         {:else}
             <a href="{image.url}" target="_blank">
-                <img src="{image.url}" class="thumbnail" alt="{image.description}">
+                <img src="{image.thumbnailUrl}" class="thumbnail" alt="{image.description}">
             </a>
         {/if}
     {/each}
 </div>
 
 <style>
+    h2 {
+        text-align: center;
+    }
+    
+    :root {
+        --image-size: 200px;
+    }
+    
     .gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        justify-content: center;
+        grid-template-columns: repeat(auto-fit, var(--image-size));
         gap: 1rem;
     }
 
     .thumbnail {
-        width: 200px;
-        height: 200px;
+        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        width: var(--image-size);
+        height: var(--image-size);
         background-color: white;
         object-fit: cover;
         object-position: center;

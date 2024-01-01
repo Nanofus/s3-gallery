@@ -12,5 +12,6 @@ export type AlbumData = Album & {
 
 export type Image = {
     url: string;
+    thumbnailUrl: string;
     description: string;
 };
