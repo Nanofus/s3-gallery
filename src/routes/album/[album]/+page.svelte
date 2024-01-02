@@ -24,12 +24,17 @@
 </script>
 
 <a href="/">{PUBLIC_BACK_BUTTON_TEXT}</a>
-<h2>{data.album.name}</h2>
+<h2>{data.album.name} {data.album.location ? " – " + data.album.location : ""}</h2>
+{#if data.album.main}
+    <div class="main">
+        <img src="{data.album.main}" alt="album cover image">
+    </div>
+{/if}
 <div class="gallery">
     {#each images as image}
         {#if isVideo(image.url)}
             <a href="{image.url}">
-                <div class="thumbnail">VIDEO</div>
+                <div class="thumbnail">Video 📽</div>
             </a>
         {:else if isGif(image.url)}
             <a href="{image.url}">
@@ -47,20 +52,35 @@
     h2 {
         text-align: center;
     }
-    
+
     :root {
         --image-size: 200px;
     }
     
+    .main {
+        display: flex;
+        justify-content: center;
+    }
+    
+    img, .thumbnail {
+        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    }
+    
+    .main > img {
+        max-width: 60rem;
+        min-width: 360px;
+        max-height: 100%;
+    }
+
     .gallery {
         display: grid;
         justify-content: center;
         grid-template-columns: repeat(auto-fit, var(--image-size));
         gap: 1rem;
+        margin: 1rem;
     }
 
     .thumbnail {
-        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
         width: var(--image-size);
         height: var(--image-size);
         background-color: white;

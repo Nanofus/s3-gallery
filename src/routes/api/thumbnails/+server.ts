@@ -63,8 +63,7 @@ export const GET: RequestHandler = async ({url}) => {
             .map(item => item.Key) as string[];
 
         for (let key of keys) {
-            const albumPath = AWS_PREFIX + decodeURIComponent(album);
-            const newKey = albumPath + '/thumbs' + key.replace(albumPath, "");
+            const newKey = AWS_PREFIX + 'thumbs/' + decodeURIComponent(album) + key.replace(AWS_PREFIX + decodeURIComponent(album), "");
             console.log("Generating thumbnail for " + key + " to " + newKey);
             if (existingThumbs.includes(newKey) || existingThumbs.includes(key)) {
                 console.log("Already generated, skipping");
@@ -81,9 +80,10 @@ export const GET: RequestHandler = async ({url}) => {
             const obj = await s3.getObject({Bucket: AWS_BUCKET, Key: key})
             const buffer = (await obj.Body?.transformToByteArray());
             const result = await sharp(buffer)
+                .rotate() // Take EXIF rotation into account
                 .toFormat("jpeg")
-                .jpeg({quality: 95})
-                .resize(200)
+                .jpeg({quality: 100})
+                .resize(300)
                 .toBuffer();
             await s3.putObject({
                 Bucket: AWS_BUCKET,

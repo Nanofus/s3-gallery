@@ -7,7 +7,7 @@ import {
     AWS_PREFIX,
     AWS_REGION,
     AWS_SECRET_ACCESS_KEY,
-    SITE_PASSWORD
+    LOGNAME
 } from "$env/static/private";
 
 export const GET: RequestHandler = async ({params}) => {
@@ -28,16 +28,28 @@ export const GET: RequestHandler = async ({params}) => {
     })
     const content = data.Contents || [];
 
+    const metadataObj = await s3.getObject({
+        Bucket: AWS_BUCKET,
+        Key: AWS_PREFIX + 'metadata.json'
+    });
+    const metadata = JSON.parse(await metadataObj.Body?.transformToString()).albums || [];
+    
+    const albumName = decodeURIComponent(encodeURIComponent(params.album).replace('a%CC%88', '%C3%A4')); // TODO: Dirty hack for umlauts
+    
     let response: AlbumData = {
-        name: params.album,
+        name: albumName,
+        location: metadata.filter((album: any) => album.name === albumName)[0]?.location,
+        main: metadata.filter((album: any) => album.name === albumName)[0]?.main
+            ? encodeURI('https://' + AWS_BUCKET + '/' + AWS_PREFIX + params.album + '/' + metadata.filter((album: any) => album.name === albumName)[0]?.main)
+            : null,
         images: content.filter(item => !item.Key?.includes('thumbs')).map(item => {
             return {
                 url: 'https://' + AWS_BUCKET + '/' + item.Key || '',
-                thumbnailUrl: 'https://' + AWS_BUCKET + '/' + item.Key?.replace('/' + params.album + '/', '/' + params.album + '/thumbs/') || '',
+                thumbnailUrl: 'https://' + AWS_BUCKET + '/' + item.Key?.replace(AWS_PREFIX, AWS_PREFIX + 'thumbs/') || '',
                 description: ''
             }
         }).filter(item => !item.url.endsWith('/'))
+            .filter(item => !item.url.toLowerCase().endsWith('.heic'))
     };
-    
     return json(response);
 }

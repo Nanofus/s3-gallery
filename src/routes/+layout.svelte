@@ -20,6 +20,11 @@
 
 <style>
     h1 {
-        font-size: 1rem;
+        font-size: 1.5rem;
+        margin-left: 1rem;
+    }
+    
+    main {
+        margin: 1rem;
     }
 </style>

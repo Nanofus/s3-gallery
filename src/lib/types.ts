@@ -4,6 +4,8 @@ export type AlbumList = {
 
 export type Album = {
     name: string;
+    location: string | null;
+    main: string | null;
 };
 
 export type AlbumData = Album & {
